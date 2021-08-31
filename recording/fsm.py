@@ -30,25 +30,23 @@ class FSM:
 
         self.transitions[state_from][event] = state_to
 
-        print(self.transitions)
-
     def event(self, event):
         event = event.upper()
-        print(self.state_current)
-        print(self.transitions.keys())
         if self.state_current in self.transitions.keys():
             if event in self.transitions[self.state_current].keys():
                 state_new = self.transitions[self.state_current][event]
                 print("Transit from " + self.state_current + " to " + state_new + " due to event " + event)
 
                 if self.state_current in self.states.keys():
-                    self.states[self.state_current]["method_post"]() # Call the post method!
+                    if self.states[self.state_current]["method_post"] != None:
+                        self.states[self.state_current]["method_post"]() # Call the post method!
 
                 else:
                     print("Strange?! Cannot find the old state in the state data! " + self.state_current)
 
                 if state_new in self.states.keys():
-                    self.states[state_new]["method_pre"]()                    
+                    if self.states[state_new]["method_pre"] != None:
+                        self.states[state_new]["method_pre"]()                    
 
                 else:
                     print("Strange?! Cannot find the new state in the state data! " + state_new)
@@ -62,7 +60,8 @@ class FSM:
 
     def loop(self):
         if self.state_current in self.states.keys():
-            self.states[self.state_current]["method_loop"]() # Call the post method!
+            if self.states[self.state_current]["method_loop"] != None:
+                self.states[self.state_current]["method_loop"]() # Call the post method!
 
         else:
             print("Strange?! Cannot find the old state in the state data! " + self.state_current)
